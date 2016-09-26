@@ -1,5 +1,8 @@
 # vim
-Quenode vim config use it .
+
+
+
+Quenode nvim quoenode
 
 
 curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
