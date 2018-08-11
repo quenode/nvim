@@ -16,79 +16,165 @@ call plug#begin('~/.config/nvim/autoload')
 
 
 
+
+
 " Let Vundle manage Vundle
 "Plug 'gmarik/vundle'
 
 
 
 " My Bundles
-"Plug 'tpope/vim-sensible'
-" cs souround
-"Plug 'tpope/vim-surround'
-" git usage 
-"Plug 'tpope/vim-fugitive'
-"Color 
-"Java Script plugins
-" Snipeti auto deploy cool 
-"Plug 'SirVer/ultisnips'
-" duplo kao gore
-"Plug 'honza/vim-snippets'
-Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
-Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
-Plug 'nanotech/jellybeans.vim'
+"Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+"Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+"Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'neomake/neomake'
 " cool buffering CTRL+P
-Plug 'kien/ctrlp.vim'
-" Search silver brew install the_silver_searcher require to install searcher
-Plug 'rking/ag.vim'
-Plug 'kana/vim-textobj-user'
-Plug 'slim-template/vim-slim'
-Plug 'flazz/vim-colorschemes'
-"Plug 'davidhalter/jedi-vim'
-Plug 'nathanaelkane/vim-indent-guides'
-"Bundle 'Valloric/YouCompleteMe'
-Plug 'https://github.com/freeo/vim-kalisi'
-Plug 'Lokaltog/vim-easymotion'
-"Plug 'klen/python-mode'
-Plug 'rizzatti/dash.vim'
-Plug 'chase/vim-ansible-yaml'
+" This should be replaced
+Plug 'mileszs/ack.vim'
+Plug 'pearofducks/ansible-vim'
+" Remove less space plugin
 
+Plug 'thirtythreeforty/lessspace.vim'
+" Search silver brew install the_silver_searcher require to install searcher
+Plug 'flazz/vim-colorschemes'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'chase/vim-ansible-yaml'
 Plug 'lepture/vim-jinja'
 
-"Plug 'christoomey/vim-tmux-navigator'
 
 
+
+Plug 'christoomey/vim-tmux-navigator'
+
+" FZF setting ctrlp other
+
+""Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+" Enable per-command history.
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.config/nvim/fuzzy-history'
+
+let g:fzf_action = {
+  \ 'enter': 'tab split',
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'down': '~50%' }
+
+
+" ansible config options from plugin
+
+let g:ansible_unindent_after_newline = 1
+let g:ansible_attribute_highlight = "ob"
+let g:ansible_name_highlight = 'd'
+let g:ansible_extra_keywords_highlight = 1
+let g:ansible_with_keywords_highlight = 'Constant'
+
+
+
+"let g:fzf_layout = { 'window': 'enew' }
+"let g:fzf_layout = { 'window': '-tabnew' }
+"let g:fzf_layout = { 'window': '10split enew' }
+
+
+
+" In Neovim, you can set up fzf window using a Vim command
+if executable('fzf')
+
+" This is the default extra key bindings
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+
+  " FZF {{{
+  " <C-p> or <C-t> to search files
+  nnoremap <silent> <C-t> :FZF -m<cr>
+  nnoremap <silent> <C-p> :FZF -m<cr>
+
+  " <M-p> for open buffers
+  nnoremap <silent> <M-p> :Buffers<cr>
+
+  nnoremap <Leader>d :Buffers<cr>
+
+  " <M-S-p> for MRU
+  nnoremap <silent> <M-S-p> :History<cr>
+
+  " Use fuzzy completion relative filepaths across directory
+  imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+
+  " Better command history with q:
+  command! CmdHist call fzf#vim#command_history({'right': '60'})
+  nnoremap q: :CmdHist<CR>
+
+  " Better search history
+  command! QHist call fzf#vim#search_history({'right': '60'})
+  nnoremap q/ :QHist<CR>
+
+  command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '80%', 'options': --no-color'})
+  " }}}
+else
+  " CtrlP fallback
+end
 
 call plug#end()
-" deoplete testing 
-let g:deoplete#enable_at_startup = 1
-if !exists('g:deoplete#omni#input_patterns')
-  let g:deoplete#omni#input_patterns = {}
-endif
+
+" deoplete testing
+
+nnoremap th  :tabfirst<CR>
+nnoremap tj  :tabnext<CR>
+nnoremap tk  :tabprev<CR>
+nnoremap tl  :tablast<CR>
+nnoremap tt  :tabedit<Space>
+nnoremap tn  :tabnext<Space>
+nnoremap tm  :tabm<Space>
+nnoremap td  :tabclose<CR>
+
+"let g:deoplete#enable_at_startup = 1
+"if !exists('g:deoplete#omni#input_patterns')
+"  let g:deoplete#omni#input_patterns = {}
+"endif
 " let g:deoplete#disable_auto_complete = 1
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+"autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+"inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " tern
-autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+"autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
 "" Maps leader keys
 " omnifuncs
-augroup omnifuncs
-  autocmd!
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup end
+"augroup omnifuncs
+"  autocmd!
+"  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"augroup end
 " tern
 
 "let g:deoplete#omni#functions.javascript = [
@@ -96,20 +182,20 @@ augroup end
 "  \ 'jspc#omni'
 "\]
 
-if exists('g:plugs["tern_for_vim"]')
-  let g:tern_show_argument_hints = 'on_hold'
-  let g:tern_show_signature_in_pum = 1
-  autocmd FileType javascript setlocal omnifunc=tern#Complete
-endif
+"if exists('g:plugs["tern_for_vim"]')
+"  let g:tern_show_argument_hints = 'on_hold'
+"  let g:tern_show_signature_in_pum = 1
+"  autocmd FileType javascript setlocal omnifunc=tern#Complete
+"endif
 " Javascript LINT
-let g:neomake_javascript_enabled_makers = ['eslint']
+"let g:neomake_javascript_enabled_makers = ['eslint']
 
 "autocmd BufWritePost,BufEnter * Neomake
 
 "Maper
 let mapleader = ","
 
-"" Qucik save 
+"" Qucik save
 noremap <Leader>s :update<CR>
 vnoremap <Leader>s :update<CR>
 inoremap <Leader>s :update<CR>
@@ -149,9 +235,9 @@ let g:pymode_folding = 0
 
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 " enable fonts for ar line
-"let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled = 0
 let g:airline_powerline_fonts = 1
+"let g:airline#extensions#tabline#fnamemod = ':t'
 
 "augroup vimrc_autocmds
 "    autocmd!
@@ -161,7 +247,7 @@ let g:airline_powerline_fonts = 1
 "    autocmd FileType python set nowrap
 "    augroup END
 "
-filetype plugin indent on
+filetype plugin indent off
 
 let mapleader=","
 
@@ -191,8 +277,8 @@ set expandtab
 set wrap
 set number
 set expandtab
-set mouse=a 
-set bs=2 
+set mouse=a
+set bs=2
 set backup
 set backupdir=~/.vim/tmp
 set backupskip=/tmp/*
@@ -218,10 +304,10 @@ set t_Co=256
 set termencoding=utf-8
 
 ""set indents
-let g:indent_guides_start_level = 2
-let g:indent_guides_guide_size = 1
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_auto_colors = 0
+"let g:indent_guides_start_level = 2
+"let g:indent_guides_guide_size = 1
+"let g:indent_guides_enable_on_vim_startup = 1
+"let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=38
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 
@@ -258,11 +344,17 @@ nmap <leader>s<right>  :rightbelow vnew<cr>
 nmap <leader>s<up>     :leftabove  new<cr>
 nmap <leader>s<down>   :rightbelow new<cr>
 
+nmap <leader>f :GitFiles<cr>
+nmap <leader>b :buffers<cr>
+
 " Tab between buffers
 "noremap <tab> <c-w><c-w>
 
 " Switch between last two buffers
 nnoremap <leader><leader> <C-^>
+
+
+nnoremap <leader>q  :q<cr>
 
 " Resize buffers
 if bufwinnr(1)
@@ -280,19 +372,21 @@ let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg']
 " Syntastic
 
 " CtrlP
-nnoremap <silent> t :CtrlP<cr>
-let g:ctrlp_working_path_mode = 2
-let g:ctrlp_by_filename = 1
-let g:ctrlp_max_files = 600
-let g:ctrlp_max_depth = 5
+"nnoremap <silent> t :CtrlP<cr>
+"let g:ctrlp_working_path_mode = 1
+"let g:ctrlp_by_filename = 1
+"let g:ctrlp_max_files = 0
+"let g:ctrlp_max_depth = 100
 
 
-let g:ctrlp_prompt_mappings = {
-    \ 'AcceptSelection("e")': ['<c-t>'],
-    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-    \ }
-
+"let g:ctrlp_prompt_mappings = {
+"    \ 'AcceptSelection("e")': ['<c-t>'],
+"    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
+"    \ }
+"
 " Go programming
-set rtp+=/usr/local/Cellar/go/1.0.3/misc/vim
+"set rtp+=/usr/local/Cellar/go/1.0.3/misc/vim
+set rtp+=/usr/local/opt/fzf
+
 " Quit with :Q
 command -nargs=0 Quit :qa!
