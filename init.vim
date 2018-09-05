@@ -1,62 +1,108 @@
 
 
+"New changes
+
 if has('nvim')
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 end
 set t_Co=256
 
-set t_Co=256
-filetype off
-filetype plugin on
-syntax on
-
 set rtp+=~/.config/nvim/autoload
 
 call plug#begin('~/.config/nvim/autoload')
+"Color Boje
+Plug 'flazz/vim-colorschemes'
+
+
+
+" Sets setup for system
 
 
 
 
-
-" Let Vundle manage Vundle
-"Plug 'gmarik/vundle'
-
-
-
+" The plugisng for neovim
 " My Bundles
-"Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
 "Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
-
+if has('nvim')
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'scrooloose/nerdtree'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-"Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+" Autosave vim NEOVIM 
+"
+"
+Plug 'vim-scripts/vim-auto-save'
+"
+let g:auto_save = 1  
+let g:auto_save_in_insert_mode = 0 
+
+" Deoplete Plugins
+Plug 'kristijanhusak/deoplete-phpactor',  {'for': 'php'}
+Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx', 'vue'] }
+
+"Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+
+"" Neosnipet expansion
+
+Plug 'Shougo/neosnippet.vim' " snippet manager
+Plug 'Shougo/neosnippet-snippets'
+
+" php refactoring options
+Plug 'StanAngeloff/php.vim', {'for': 'php'}
+Plug 'stephpy/vim-php-cs-fixer', {'for': 'php'}
+Plug 'nishigori/vim-php-dictionary', {'for': 'php'}
+Plug 'adoy/vim-php-refactoring-toolbox', {'for': 'php'}
+Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+Plug '2072/php-indenting-for-vim', {'for': 'php'}
+" php doc autocompletion
+Plug 'tobyS/vmustache' | Plug 'tobyS/pdv', {'for': 'php'}
+
+" javascript plugins
+Plug 'pangloss/vim-javascript'
+" need to run npm install in the folder ~/nvim/plugged/tern_for_vim
+Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx', 'vue'], 'do': 'npm install'}
+" Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx', 'vue'] }
+
 Plug 'scrooloose/nerdcommenter'
 Plug 'neomake/neomake'
 " cool buffering CTRL+P
 " This should be replaced
 Plug 'mileszs/ack.vim'
-Plug 'pearofducks/ansible-vim'
+Plug 'pearofducks/ansible-vim', { 'do': 'cd ./UltiSnips; ./generate.py' }
+
+
 " Remove less space plugin
 
-Plug 'thirtythreeforty/lessspace.vim'
+"Plug 'thirtythreeforty/lessspace.vim'
 " Search silver brew install the_silver_searcher require to install searcher
 Plug 'flazz/vim-colorschemes'
+" Poligota
+Plug 'sheerun/vim-polyglot'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'Lokaltog/vim-easymotion'
-Plug 'chase/vim-ansible-yaml'
 Plug 'lepture/vim-jinja'
 
 
 
-
 Plug 'christoomey/vim-tmux-navigator'
-
 " FZF setting ctrlp other
 
 ""Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
+call plug#end()
+
+
+
+""" Work Around for slow unamed clipboard
+let g:clipboard = {'copy': {'+': 'pbcopy', '*': 'pbcopy'}, 'paste': {'+': 'pbpaste', '*': 'pbpaste'}, 'name': 'pbcopy', 'cache_enabled': 0}
+set clipboard+=unnamedplus
+
+
+"Maper
+let mapleader = ","
 
 " Enable per-command history.
 " CTRL-N and CTRL-P will be automatically bound to next-history and
@@ -81,6 +127,8 @@ let g:ansible_unindent_after_newline = 1
 let g:ansible_attribute_highlight = "ob"
 let g:ansible_name_highlight = 'd'
 let g:ansible_extra_keywords_highlight = 1
+let g:ansible_yamlKeyName = 'yamlKey'
+let g:ansible_template_syntaxes = { '*.j2': '.config.j2' }
 let g:ansible_with_keywords_highlight = 'Constant'
 
 
@@ -105,8 +153,6 @@ let g:fzf_colors =
   \ 'hl+':     ['fg', 'Statement'],
   \ 'info':    ['fg', 'PreProc'],
   \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
@@ -145,6 +191,42 @@ call plug#end()
 
 " deoplete testing
 
+
+" Deoplete enable
+let g:deoplete#enable_at_startup = 1
+
+" deoplete tab-complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+
+
+let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
+let g:deoplete#ignore_sources.php = ['omni']
+call deoplete#custom#option('sources', {
+    \ '_': ['omni', 'around', 'buffer', 'tag', 'member', 'file', 'neosnippet'],
+    \ 'php': ['phpactor', 'around', 'buffer', 'member', 'file', 'neosnippet']
+    \})
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#file#enable_buffer_path = 1
+
+
+
+" neosnippet
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
+
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"inoremap <silent><expr><CR> pumvisible() ? deoplete#mappings#close_popup()."\<Plug>(neosnippet_expand_or_jump)" : "\<CR>"
+let g:neosnippet#enable_completed_snippet = 1
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" tern
+if exists('g:plugs["tern_for_vim"]')
+  let g:tern_show_argument_hints = 'on_hold'
+ let g:tern_show_signature_in_pum = 1
+ autocmd FileType javascript setlocal omnifunc=tern#Complete
+endif
+
 nnoremap th  :tabfirst<CR>
 nnoremap tj  :tabnext<CR>
 nnoremap tk  :tabprev<CR>
@@ -154,47 +236,6 @@ nnoremap tn  :tabnext<Space>
 nnoremap tm  :tabm<Space>
 nnoremap td  :tabclose<CR>
 
-"let g:deoplete#enable_at_startup = 1
-"if !exists('g:deoplete#omni#input_patterns')
-"  let g:deoplete#omni#input_patterns = {}
-"endif
-" let g:deoplete#disable_auto_complete = 1
-"autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
-" deoplete tab-complete
-"inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-" tern
-"autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
-"" Maps leader keys
-" omnifuncs
-"augroup omnifuncs
-"  autocmd!
-"  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"augroup end
-" tern
-
-"let g:deoplete#omni#functions.javascript = [
-"\ 'tern#Complete',
-"  \ 'jspc#omni'
-"\]
-
-"if exists('g:plugs["tern_for_vim"]')
-"  let g:tern_show_argument_hints = 'on_hold'
-"  let g:tern_show_signature_in_pum = 1
-"  autocmd FileType javascript setlocal omnifunc=tern#Complete
-"endif
-" Javascript LINT
-"let g:neomake_javascript_enabled_makers = ['eslint']
-
-"autocmd BufWritePost,BufEnter * Neomake
-
-"Maper
-let mapleader = ","
-
 "" Qucik save
 noremap <Leader>s :update<CR>
 vnoremap <Leader>s :update<CR>
@@ -203,33 +244,32 @@ inoremap <Leader>s :update<CR>
 
 
 set pastetoggle=<F2>
-set clipboard=unnamed
-let g:pymode_rope = 0
+"let g:pymode_rope = 0
 " Documentation
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
+"let g:pymode_doc = 1
+"let g:pymode_doc_key = 'K'
 
 "Linting
-let g:pymode_lint = 1
-let g:pymode_lint_checker = "pyflakes,pep8"
+"let g:pymode_lint = 1
+"let g:pymode_lint_checker = "pyflakes,pep8"
 " Auto check on save
-let g:pymode_lint_write = 1
+"let g:pymode_lint_write = 1
 
 " Support virtualenv
-let g:pymode_virtualenv = 1
+"let g:pymode_virtualenv = 1
 
 " Enable breakpoints plugin
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_bind = '<leader>b'
+"let g:pymode_breakpoint = 1
+"let g:pymode_breakpoint_bind = '<leader>b'
 
 " syntax highlighting
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
+"let g:pymode_syntax = 1
+"let g:pymode_syntax_all = 1
+"let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+"let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 " Don't autofold code
-let g:pymode_folding = 0
+"let g:pymode_folding = 0
 
 
 
@@ -247,11 +287,11 @@ let g:airline_powerline_fonts = 1
 "    autocmd FileType python set nowrap
 "    augroup END
 "
-filetype plugin indent off
+"filetype plugin indent off
 
-let mapleader=","
 
 "color jellybeans
+set background=dark
 colorscheme Monokai
 "let g:jellybeans_use_term_italics = 1
 
@@ -261,67 +301,31 @@ colorscheme Monokai
 "map  / <Plug>(easymotion-sn)
 "omap / <Plug>(easymotion-tn)
 
-set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " High problematic char spaces
-set list
-set cursorline
-set modelines=1
-set autoindent
-set shiftwidth=2
-set clipboard=unnamed
-set synmaxcol=128
-"set ttyscroll=10
-set encoding=utf-8
-set tabstop=4
-set softtabstop=4
-set expandtab
-set wrap
-set number
-set expandtab
-set mouse=a
-set bs=2
-set backup
-set backupdir=~/.vim/tmp
-set backupskip=/tmp/*
-set directory=~/.vim/tmp
-set writebackup
+"set nocompatible
+"filetype off
+"filetype plugin indent on
+"filetype plugin on
 
-set hlsearch
-set ignorecase
-set smartcase
 
-set incsearch
-set cursorline
-set showcmd
-set wildmenu
 set showmatch
 set guifont=Source\ Code\ Pro\ for\ Powerline:h13
 set laststatus=2
-
 set encoding=utf-8
-set t_Co=256
+"set t_Co=256
 "set fillchars+=stl:\ ,stlnc:\
 "set term=xterm-256color
 set termencoding=utf-8
 
-""set indents
-"let g:indent_guides_start_level = 2
-"let g:indent_guides_guide_size = 1
-"let g:indent_guides_enable_on_vim_startup = 1
-"let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=38
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 
-" Automatic formatting
-autocmd BufWritePre *.rb :%s/\s\+$//e
-autocmd BufWritePre *.go :%s/\s\+$//e
-autocmd BufWritePre *.haml :%s/\s\+$//e
-autocmd BufWritePre *.html :%s/\s\+$//e
-autocmd BufWritePre *.scss :%s/\s\+$//e
-autocmd BufWritePre *.slim :%s/\s\+$//e
-autocmd BufWritePre *.py :%s/\s\+$//e
 
-au BufNewFile * set noeol
-au BufRead,BufNewFile *.go set filetype=go
+
+
+
+
+
+
+"" Key mapings setup
+let mapleader=","
 
 " No show command
 autocmd VimEnter * set nosc
@@ -390,3 +394,5 @@ set rtp+=/usr/local/opt/fzf
 
 " Quit with :Q
 command -nargs=0 Quit :qa!
+
+
