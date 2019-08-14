@@ -22,7 +22,6 @@ Plug 'flazz/vim-colorschemes'
 
 " The plugisng for neovim
 " My Bundles
-"Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 if has('nvim')
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -34,13 +33,16 @@ endif
 "
 "
 Plug 'vim-scripts/vim-auto-save'
+
+
+"Plug 'rizzatti/dash.vim'
 "
-let g:auto_save = 1  
-let g:auto_save_in_insert_mode = 0 
+let g:auto_save = 1
+"let g:auto_save_in_insert_mode = 0 
 
 " Deoplete Plugins
-Plug 'kristijanhusak/deoplete-phpactor',  {'for': 'php'}
-Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx', 'vue'] }
+" Plug 'kristijanhusak/deoplete-phpactor',  {'for': 'php'}
+" Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx', 'vue'] }
 
 "Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
 
@@ -50,59 +52,97 @@ Plug 'Shougo/neosnippet.vim' " snippet manager
 Plug 'Shougo/neosnippet-snippets'
 
 " php refactoring options
-Plug 'StanAngeloff/php.vim', {'for': 'php'}
-Plug 'stephpy/vim-php-cs-fixer', {'for': 'php'}
-Plug 'nishigori/vim-php-dictionary', {'for': 'php'}
-Plug 'adoy/vim-php-refactoring-toolbox', {'for': 'php'}
-Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
-Plug '2072/php-indenting-for-vim', {'for': 'php'}
+" Plug 'StanAngeloff/php.vim', {'for': 'php'}
+" Plug 'stephpy/vim-php-cs-fixer', {'for': 'php'}
+" Plug 'nishigori/vim-php-dictionary', {'for': 'php'}
+" Plug 'adoy/vim-php-refactoring-toolbox', {'for': 'php'}
+" Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+" Plug '2072/php-indenting-for-vim', {'for': 'php'}
 " php doc autocompletion
-Plug 'tobyS/vmustache' | Plug 'tobyS/pdv', {'for': 'php'}
+" Plug 'tobyS/vmustache' | Plug 'tobyS/pdv', {'for': 'php'}
 
 " javascript plugins
-Plug 'pangloss/vim-javascript'
+" Plug 'pangloss/vim-javascript'
 " need to run npm install in the folder ~/nvim/plugged/tern_for_vim
-Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx', 'vue'], 'do': 'npm install'}
+" Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx', 'vue'], 'do': 'npm install'}
 " Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx', 'vue'] }
 
 Plug 'scrooloose/nerdcommenter'
 Plug 'neomake/neomake'
 " cool buffering CTRL+P
 " This should be replaced
+
 Plug 'mileszs/ack.vim'
 Plug 'pearofducks/ansible-vim', { 'do': 'cd ./UltiSnips; ./generate.py' }
 
 
+" Teraform 
+Plug 'hashivim/vim-terraform'
+Plug 'vim-syntastic/syntastic'
+Plug 'juliosueiras/vim-terraform-completion'
+
 " Remove less space plugin
 
-"Plug 'thirtythreeforty/lessspace.vim'
+Plug 'thirtythreeforty/lessspace.vim'
 " Search silver brew install the_silver_searcher require to install searcher
-Plug 'flazz/vim-colorschemes'
 " Poligota
 Plug 'sheerun/vim-polyglot'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'Lokaltog/vim-easymotion'
-Plug 'lepture/vim-jinja'
+" Plug 'Lokaltog/vim-easymotion'
 
 
 
 Plug 'christoomey/vim-tmux-navigator'
 " FZF setting ctrlp other
 
-""Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
+
+
+
 
 call plug#end()
 
 
+" Map Leader to space 
+let mapleader = ","
+
+"Puppet     
+let g:puppet_align_hashes = 0
+
+""" Teraform config 
+
+" Syntastic Config
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" (Optional)Remove Info(Preview) window
+set completeopt-=preview
+
+" (Optional)Hide Info(Preview) window after completions
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
+" (Optional) Enable terraform plan to be include in filter
+let g:syntastic_terraform_tffilter_plan = 1
+
+" (Optional) Default: 0, enable(1)/disable(0) plugin's keymapping
+let g:terraform_completion_keys = 1
+
+" (Optional) Default: 1, enable(1)/disable(0) terraform module registry completion
+let g:terraform_registry_module_completion = 0
 
 """ Work Around for slow unamed clipboard
 let g:clipboard = {'copy': {'+': 'pbcopy', '*': 'pbcopy'}, 'paste': {'+': 'pbpaste', '*': 'pbpaste'}, 'name': 'pbcopy', 'cache_enabled': 0}
 set clipboard+=unnamedplus
 
-
-"Maper
-let mapleader = ","
 
 " Enable per-command history.
 " CTRL-N and CTRL-P will be automatically bound to next-history and
@@ -123,19 +163,19 @@ let g:fzf_layout = { 'down': '~50%' }
 
 " ansible config options from plugin
 
-let g:ansible_unindent_after_newline = 1
+let g:ansible_unindent_after_newline = 0
 let g:ansible_attribute_highlight = "ob"
 let g:ansible_name_highlight = 'd'
 let g:ansible_extra_keywords_highlight = 1
 let g:ansible_yamlKeyName = 'yamlKey'
 let g:ansible_template_syntaxes = { '*.j2': '.config.j2' }
 let g:ansible_with_keywords_highlight = 'Constant'
+"
+"
 
-
-
-"let g:fzf_layout = { 'window': 'enew' }
-"let g:fzf_layout = { 'window': '-tabnew' }
-"let g:fzf_layout = { 'window': '10split enew' }
+let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'window': '-tabnew' }
+let g:fzf_layout = { 'window': '10split enew' }
 
 
 
@@ -159,7 +199,7 @@ let g:fzf_colors =
 
   " FZF {{{
   " <C-p> or <C-t> to search files
-  nnoremap <silent> <C-t> :FZF -m<cr>
+  nnoremap <silent> <C-t> :History <cr>
   nnoremap <silent> <C-p> :FZF -m<cr>
 
   " <M-p> for open buffers
@@ -181,7 +221,7 @@ let g:fzf_colors =
   command! QHist call fzf#vim#search_history({'right': '60'})
   nnoremap q/ :QHist<CR>
 
-  command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '80%', 'options': --no-color'})
+"  command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '80%', 'options': --no-color'})
   " }}}
 else
   " CtrlP fallback
@@ -210,22 +250,23 @@ let g:deoplete#file#enable_buffer_path = 1
 
 
 
+
 " neosnippet
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_target)
 
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"inoremap <silent><expr><CR> pumvisible() ? deoplete#mappings#close_popup()."\<Plug>(neosnippet_expand_or_jump)" : "\<CR>"
+
 let g:neosnippet#enable_completed_snippet = 1
 let g:neosnippet#enable_snipmate_compatibility = 1
 
 " tern
-if exists('g:plugs["tern_for_vim"]')
-  let g:tern_show_argument_hints = 'on_hold'
- let g:tern_show_signature_in_pum = 1
- autocmd FileType javascript setlocal omnifunc=tern#Complete
-endif
+"if exists('g:plugs["tern_for_vim"]')
+"let g:tern_show_argument_hints = 'on_hold'
+"  let g:tern_show_signature_in_pum = 1
+" autocmd FileType javascript setlocal omnifunc=tern#Complete
+"endif
 
 nnoremap th  :tabfirst<CR>
 nnoremap tj  :tabnext<CR>
@@ -273,10 +314,10 @@ set pastetoggle=<F2>
 
 
 
-let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
+"let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 " enable fonts for ar line
-let g:airline#extensions#tabline#enabled = 0
-let g:airline_powerline_fonts = 1
+"let g:airline#extensions#tabline#enabled = 0
+"let g:airline_powerline_fonts = 1
 "let g:airline#extensions#tabline#fnamemod = ':t'
 
 "augroup vimrc_autocmds
@@ -287,7 +328,9 @@ let g:airline_powerline_fonts = 1
 "    autocmd FileType python set nowrap
 "    augroup END
 "
-"filetype plugin indent off
+"filetype plugin indent on
+syntax on
+
 
 
 "color jellybeans
@@ -301,19 +344,18 @@ colorscheme Monokai
 "map  / <Plug>(easymotion-sn)
 "omap / <Plug>(easymotion-tn)
 
-"set nocompatible
+set nocompatible
 "filetype off
-"filetype plugin indent on
+filetype plugin indent on
 "filetype plugin on
 
 
-set showmatch
+"set showmatch
 set guifont=Source\ Code\ Pro\ for\ Powerline:h13
 set laststatus=2
 set encoding=utf-8
-"set t_Co=256
-"set fillchars+=stl:\ ,stlnc:\
-"set term=xterm-256color
+set t_Co=256
+set fillchars+=stl:\ ,stlnc:\
 set termencoding=utf-8
 
 
@@ -323,9 +365,6 @@ set termencoding=utf-8
 
 
 
-
-"" Key mapings setup
-let mapleader=","
 
 " No show command
 autocmd VimEnter * set nosc
@@ -358,6 +397,8 @@ nmap <leader>b :buffers<cr>
 nnoremap <leader><leader> <C-^>
 
 
+nnoremap <leader>z  :wq!<cr>
+
 nnoremap <leader>q  :q<cr>
 
 " Resize buffers
@@ -368,19 +409,28 @@ if bufwinnr(1)
   nmap ä <C-W>+<C-W>+
 endif
 
-" NERDTree
-nmap <leader>n :NERDTreeToggle<CR>
-let NERDTreeHighlightCursorline=1
-let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg']
-
 " Syntastic
+
+
+
+
+augroup ansible_vim_fthosts
+  autocmd!
+  autocmd BufNewFile,BufRead hosts setfiletype yaml.ansible
+augroup END
+
+
+au BufRead,BufNewFile *.yml set filetype=yaml.ansible
+au BufRead,BufNewFile *.j2 set filetype=yaml.ansible
+au BufRead,BufNewFile *.ini set filetype=yaml.ansible
+
 
 " CtrlP
 "nnoremap <silent> t :CtrlP<cr>
-"let g:ctrlp_working_path_mode = 1
-"let g:ctrlp_by_filename = 1
-"let g:ctrlp_max_files = 0
-"let g:ctrlp_max_depth = 100
+let g:ctrlp_working_path_mode = 1
+let g:ctrlp_by_filename = 1
+let g:ctrlp_max_files = 0
+let g:ctrlp_max_depth = 100
 
 
 "let g:ctrlp_prompt_mappings = {
