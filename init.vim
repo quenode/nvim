@@ -12,11 +12,16 @@ set rtp+=~/.config/nvim/autoload
 call plug#begin('~/.config/nvim/autoload')
 "Color Boje
 Plug 'flazz/vim-colorschemes'
+Plug 'tpope/vim-commentary'
 
+""" TERN
+Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 
 
 " Sets setup for system
-
+Plug 'mkitt/tabline.vim'
 
 
 
@@ -37,12 +42,10 @@ endif
 
 "Plug 'rizzatti/dash.vim'
 "
-"let g:auto_save = 1
+" let g:auto_save = 1
 "let g:auto_save_in_insert_mode = 0 
 
 " Deoplete Plugins
-" Plug 'kristijanhusak/deoplete-phpactor',  {'for': 'php'}
-" Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx', 'vue'] }
 
 "Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
 
@@ -67,7 +70,9 @@ Plug 'Shougo/neosnippet-snippets'
 " Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx', 'vue'], 'do': 'npm install'}
 " Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx', 'vue'] }
 
-Plug 'scrooloose/nerdcommenter'
+" Plug 'scrooloose/nerdcommenter'
+
+
 "Plug 'neomake/neomake'
 " cool buffering CTRL+P
 " This should be replaced
@@ -95,6 +100,11 @@ Plug 'nathanaelkane/vim-indent-guides'
 
 
 Plug 'christoomey/vim-tmux-navigator'
+
+""YANK TMUX
+
+Plug 'roxma/vim-tmux-clipboard'
+
 " FZF setting ctrlp other
 
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -255,6 +265,7 @@ let g:ale_fixers = {
 \   'javascript': ['prettier'],
 \   'css': ['prettier'],
 \   'yaml': ['prettier'],
+\   'yaml.ansible': ['prettier'],
 \}
 
 let g:ale_keep_list_window_open = 0
@@ -293,12 +304,15 @@ let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
 let g:deoplete#ignore_sources.php = ['omni']
 call deoplete#custom#option('sources', {
     \ '_': ['ale', 'omni', 'around', 'buffer', 'tag', 'member', 'file', 'neosnippet'],
-    \ 'php': ['ale,phpactor', 'around', 'buffer', 'member', 'file', 'neosnippet']
+    \ 'php': ['ale', 'phpactor', 'around', 'buffer', 'member', 'file', 'neosnippet'],
+    \ 'javascript': ['ale', 'tern', 'around', 'buffer', 'member', 'file', 'neosnippet']
     \})
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#file#enable_buffer_path = 1
 let g:deoplete#auto_complete_delay = 3
 
+
+set completeopt=longest,menuone,preview
 
 
 " neosnippet
@@ -332,6 +346,11 @@ noremap <Leader>s :update<CR>
 vnoremap <Leader>s :update<CR>
 inoremap <Leader>s :update<CR>
 
+"" Quit File no save
+noremap <Leader>q :q!<CR>
+
+"" RunRG Grep
+noremap <Leader>rg :Rg<CR>
 
 
 set pastetoggle=<F2>
@@ -456,10 +475,9 @@ nmap <leader>b :buffers<cr>
 " Switch between last two buffers
 nnoremap <leader><leader> <C-^>
 
-
+""" Save EXIT Z
 nnoremap <leader>z  :wq!<cr>
 
-nnoremap <leader>q  :q<cr>
 
 " Resize buffers
 if bufwinnr(1)
@@ -487,6 +505,8 @@ au BufRead,BufNewFile *.yml set filetype=yaml.ansible
 " au BufRead,BufNewFile *.ini set filetype=yaml.ansible
 
 
+autocmd FileType yaml.ansible setlocal commentstring=#\ %s
+
 " autocmd BufNewFile,BufReadPost * if &filetype == yaml expandtab shiftwidth=2 indentkeys-=0# | endif
 " autocmd BufNewFile,BufReadPost * filetype == yaml expandtab shiftwidth=2 indentkeys-=0#
 
@@ -500,11 +520,6 @@ let g:ctrlp_max_files = 0
 let g:ctrlp_max_depth = 100
 
 
-"let g:ctrlp_prompt_mappings = {
-"    \ 'AcceptSelection("e")': ['<c-t>'],
-"    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-"    \ }
-"
 " Go programming
 "set rtp+=/usr/local/Cellar/go/1.0.3/misc/vim
 set rtp+=/usr/local/opt/fzf
