@@ -3,3 +3,5 @@ fuzzy*
 .new*
 *.backup
 plugged/
+.DS_Store
+.netrwhist
