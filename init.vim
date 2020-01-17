@@ -23,7 +23,7 @@ Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 " Sets setup for system
 Plug 'mkitt/tabline.vim'
 
-
+Plug 'phenomenes/ansible-snippets'
 
 " The plugisng for neovim
 " My Bundles
@@ -37,13 +37,14 @@ endif
 " Autosave vim NEOVIM 
 "
 "
-"Plug 'vim-scripts/vim-auto-save'
+Plug '907th/vim-auto-save'
+ 
 
 
 "Plug 'rizzatti/dash.vim'
 "
-" let g:auto_save = 1
-"let g:auto_save_in_insert_mode = 0 
+let g:auto_save = 1
+"let g:auto_save_in_insert_mode = 0
 
 " Deoplete Plugins
 
@@ -115,21 +116,19 @@ Plug 'junegunn/fzf.vim'
 " post install (yarn install | npm install) then load plugin only for editing supported files
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
-
+" EOF PLUGS 
 call plug#end()
 
 
-" Map Leader to space
+" Map Leader to comma
 let mapleader = ","
 
-"Puppet
-let g:puppet_align_hashes = 0
 
 """ Teraform config
 
 " Syntastic Config
 "set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
+"junegunn/fzf.vimset statusline+=%{SyntasticStatuslineFlag()}
 "set statusline+=%*
 
 "let g:syntastic_always_populate_loc_list = 1
@@ -162,42 +161,29 @@ set clipboard+=unnamedplus
 " CTRL-N and CTRL-P will be automatically bound to next-history and
 " previous-history instead of down and up. If you don't like the change,
 " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+
+if has('nvim') || has('gui_running')
+  let $FZF_DEFAULT_OPTS .= ' --inline-info'
+endif
+
+command! -nargs=? -complete=dir AF
+  \ call fzf#run(fzf#wrap(fzf#vim#with_preview({
+  \   'source': 'fd --type f --hidden --follow --exclude .git --no-ignore . '.expand(<q-args>)
+  \ })))
+
+
 let g:fzf_history_dir = '~/.config/nvim/fuzzy-history'
 
-let g:fzf_action = {
-  \ 'enter': 'tab split',
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
+" let g:fzf_action = {
+"   \ 'enter': 'e ',
+"   \ 'ctrl-t': 'tab split',
+"   \ 'ctrl-x': 'split',
+"   \ 'ctrl-v': 'vsplit' }
 
 " Default fzf layout
 " - down / up / left / right
-let g:fzf_layout = { 'down': '~50%' }
+"let g:fzf_layout = { 'up': '~80%' }
 
-
-" ansible config options from plugin
-
-let g:ansible_unindent_after_newline = 3
-let g:ansible_attribute_highlight = "ob"
-let g:ansible_name_highlight = 'd'
-let g:ansible_extra_keywords_highlight = 1
-let g:ansible_yamlKeyName = 'yamlKey'
-let g:ansible_template_syntaxes = { '*.j2': '.config.j2' }
-let g:ansible_with_keywords_highlight = 'Constant'
-"
-"
-
-let g:fzf_layout = { 'window': 'enew' }
-let g:fzf_layout = { 'window': '-tabnew' }
-let g:fzf_layout = { 'window': '10split enew' }
-
-
-
-" In Neovim, you can set up fzf window using a Vim command
-if executable('fzf')
-
-" This is the default extra key bindings
-" Customize fzf colors to match your color scheme
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
@@ -206,9 +192,79 @@ let g:fzf_colors =
   \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
   \ 'hl+':     ['fg', 'Statement'],
   \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
   \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
+" Terminal buffer options for fzf
+autocmd! FileType fzf
+autocmd  FileType fzf set noshowmode noruler nonu
+
+if has('nvim')
+  function! s:create_float(hl, opts)
+    let buf = nvim_create_buf(v:false, v:true)
+    let opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
+    let win = nvim_open_win(buf, v:true, opts)
+    call setwinvar(win, '&winhighlight', 'NormalFloat:'.a:hl)
+    call setwinvar(win, '&colorcolumn', '')
+    return buf
+  endfunction
+
+  function! FloatingFZF()
+    " Size and position
+    let width = float2nr(&columns * 0.9)
+    let height = float2nr(&lines * 0.6)
+    let row = float2nr((&lines - height) / 2)
+    let col = float2nr((&columns - width) / 2)
+
+    " Border
+    let top = '╭' . repeat('─', width - 2) . '╮'
+    let mid = '│' . repeat(' ', width - 2) . '│'
+    let bot = '╰' . repeat('─', width - 2) . '╯'
+    let border = [top] + repeat([mid], height - 2) + [bot]
+
+    " Draw frame
+    let s:frame = s:create_float('Comment', {'row': row, 'col': col, 'width': width, 'height': height})
+    call nvim_buf_set_lines(s:frame, 0, -1, v:true, border)
+
+    " Draw viewport
+    call s:create_float('Normal', {'row': row + 1, 'col': col + 2, 'width': width - 4, 'height': height - 2})
+    autocmd BufWipeout <buffer> execute 'bwipeout' s:frame
+  endfunction
+
+  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+endif
+
+
+
+
+"
+
+"let g:fzf_layout = { 'window': 'enew' }
+"let g:fzf_layout = { 'window': '-tabnew' }
+"let g:fzf_layout = { 'window': '10split enew' }
+
+
+
+" In Neovim, you can set up fzf window using a Vim command
+"if executable('fzf')
+
+" This is the default extra key bindings
+" Customize fzf colors to match your color scheme
+" let g:fzf_colors =
+" \ { 'fg':      ['fg', 'Normal'],
+"   \ 'bg':      ['bg', 'Normal'],
+"   \ 'hl':      ['fg', 'Comment'],
+"   \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+"   \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+"   \ 'hl+':     ['fg', 'Statement'],
+"   \ 'info':    ['fg', 'PreProc'],
+"   \ 'prompt':  ['fg', 'Conditional'],
+"   \ 'spinner': ['fg', 'Label'],
+"   \ 'header':  ['fg', 'Comment'] }
 
 
   " FZF {{{
@@ -216,13 +272,15 @@ let g:fzf_colors =
   nnoremap <silent> <C-t> :History <cr>
   nnoremap <silent> <C-p> :FZF -m<cr>
 
-  " <M-p> for open buffers
-  nnoremap <silent> <M-p> :Buffers<cr>
+  " <M-p> for open junegunn/fzf.vimbuffers
+  " nnoremap <M-e> :Buffers <cr>
+  "nnoremap <M-E> :History <cr>
 
   nnoremap <Leader>d :Buffers<cr>
+  nnoremap <Leader>b :Buffers<cr>
 
   " <M-S-p> for MRU
-  nnoremap <silent> <M-S-p> :History<cr>
+  "nnoremap <silent> <M-S-p> :History<cr>
 
   " Use fuzzy completion relative filepaths across directory
   imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
@@ -235,15 +293,17 @@ let g:fzf_colors =
   command! QHist call fzf#vim#search_history({'right': '60'})
   nnoremap q/ :QHist<CR>
 
-"  command! -bang -nargs=* Ack call fzf#vim#ag(<q-args>, {'down': '80%', 'options': --no-color'})
-  " }}}
-else
-  " CtrlP fallback
-end
 
-call plug#end()
+" ansible config options from plugin
 
-
+let g:ansible_unindent_after_newline = 3
+let g:ansible_attribute_highlight = "ob"
+let g:ansible_name_highlight = 'd'
+let g:ansible_extra_keywords_highlight = 1
+let g:ansible_yamlKeyName = 'yamlKey'
+let g:ansible_template_syntaxes = { '*.j2': '.config.j2' }
+let g:ansible_with_keywords_highlight = 'Constant'
+"
 
 "
 "
@@ -461,13 +521,12 @@ nnoremap k gk
 nmap <leader>fef ggVG=
 
 " Open new buffers
-nmap <leader>s<left>   :leftabove  vnew<cr>
-nmap <leader>s<right>  :rightbelow vnew<cr>
-nmap <leader>s<up>     :leftabove  new<cr>
-nmap <leader>s<down>   :rightbelow new<cr>
+"nmap <leader>s<left>   :leftabove  vnew<cr>
+"nmap <leader>s<right>  :rightbelow vnew<cr>
+"nmap <leader>s<up>     :leftabove  new<cr>
+"nmap <leader>s<down>   :rightbelow new<cr>
 
 nmap <leader>f :GitFiles<cr>
-nmap <leader>b :buffers<cr>
 
 " Tab between buffers
 "noremap <tab> <c-w><c-w>
