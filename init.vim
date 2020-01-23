@@ -158,6 +158,10 @@ let g:clipboard = {'copy': {'+': 'pbcopy', '*': 'pbcopy'}, 'paste': {'+': 'pbpas
 set clipboard+=unnamedplus
 endif
 
+if has('unix')
+set rtp+=~/.fzf
+endif
+
 
 " Enable per-command history.
 " CTRL-N and CTRL-P will be automatically bound to next-history and
