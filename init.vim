@@ -3,7 +3,7 @@
 "New changes
 
 if has('nvim')
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+	let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 end
 set t_Co=256
 
@@ -28,17 +28,17 @@ Plug 'phenomenes/ansible-snippets'
 " The plugisng for neovim
 " My Bundles
 if has('nvim')
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
+	Plug 'Shougo/deoplete.nvim'
+	Plug 'roxma/nvim-yarp'
+	Plug 'roxma/vim-hug-neovim-rpc'
 endif
 " Autosave vim NEOVIM 
 "
 "
 Plug '907th/vim-auto-save'
- 
+
 
 
 "Plug 'rizzatti/dash.vim'
@@ -153,8 +153,10 @@ let g:terraform_completion_keys = 1
 let g:terraform_registry_module_completion = 0
 
 """ Work Around for slow unamed clipboard
+if has('macunix')
 let g:clipboard = {'copy': {'+': 'pbcopy', '*': 'pbcopy'}, 'paste': {'+': 'pbpaste', '*': 'pbpaste'}, 'name': 'pbcopy', 'cache_enabled': 0}
 set clipboard+=unnamedplus
+endif
 
 
 " Enable per-command history.
@@ -163,13 +165,13 @@ set clipboard+=unnamedplus
 " explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
 
 if has('nvim') || has('gui_running')
-  let $FZF_DEFAULT_OPTS .= ' --inline-info'
+	let $FZF_DEFAULT_OPTS .= ' --inline-info'
 endif
 
 command! -nargs=? -complete=dir AF
-  \ call fzf#run(fzf#wrap(fzf#vim#with_preview({
-  \   'source': 'fd --type f --hidden --follow --exclude .git --no-ignore . '.expand(<q-args>)
-  \ })))
+			\ call fzf#run(fzf#wrap(fzf#vim#with_preview({
+			\   'source': 'fd --type f --hidden --follow --exclude .git --no-ignore . '.expand(<q-args>)
+			\ })))
 
 
 let g:fzf_history_dir = '~/.config/nvim/fuzzy-history'
@@ -185,57 +187,57 @@ let g:fzf_history_dir = '~/.config/nvim/fuzzy-history'
 "let g:fzf_layout = { 'up': '~80%' }
 
 let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
+			\ { 'fg':      ['fg', 'Normal'],
+			\ 'bg':      ['bg', 'Normal'],
+			\ 'hl':      ['fg', 'Comment'],
+			\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+			\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+			\ 'hl+':     ['fg', 'Statement'],
+			\ 'info':    ['fg', 'PreProc'],
+			\ 'border':  ['fg', 'Ignore'],
+			\ 'prompt':  ['fg', 'Conditional'],
+			\ 'pointer': ['fg', 'Exception'],
+			\ 'marker':  ['fg', 'Keyword'],
+			\ 'spinner': ['fg', 'Label'],
+			\ 'header':  ['fg', 'Comment'] }
 
 " Terminal buffer options for fzf
 autocmd! FileType fzf
 autocmd  FileType fzf set noshowmode noruler nonu
 
 if has('nvim')
-  function! s:create_float(hl, opts)
-    let buf = nvim_create_buf(v:false, v:true)
-    let opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
-    let win = nvim_open_win(buf, v:true, opts)
-    call setwinvar(win, '&winhighlight', 'NormalFloat:'.a:hl)
-    call setwinvar(win, '&colorcolumn', '')
-    return buf
-  endfunction
+	function! s:create_float(hl, opts)
+		let buf = nvim_create_buf(v:false, v:true)
+		let opts = extend({'relative': 'editor', 'style': 'minimal'}, a:opts)
+		let win = nvim_open_win(buf, v:true, opts)
+		call setwinvar(win, '&winhighlight', 'NormalFloat:'.a:hl)
+		call setwinvar(win, '&colorcolumn', '')
+		return buf
+	endfunction
 
-  function! FloatingFZF()
-    " Size and position
-    let width = float2nr(&columns * 0.9)
-    let height = float2nr(&lines * 0.6)
-    let row = float2nr((&lines - height) / 2)
-    let col = float2nr((&columns - width) / 2)
+	function! FloatingFZF()
+		" Size and position
+		let width = float2nr(&columns * 0.9)
+		let height = float2nr(&lines * 0.6)
+		let row = float2nr((&lines - height) / 2)
+		let col = float2nr((&columns - width) / 2)
 
-    " Border
-    let top = '╭' . repeat('─', width - 2) . '╮'
-    let mid = '│' . repeat(' ', width - 2) . '│'
-    let bot = '╰' . repeat('─', width - 2) . '╯'
-    let border = [top] + repeat([mid], height - 2) + [bot]
+		" Border
+		let top = '╭' . repeat('─', width - 2) . '╮'
+		let mid = '│' . repeat(' ', width - 2) . '│'
+		let bot = '╰' . repeat('─', width - 2) . '╯'
+		let border = [top] + repeat([mid], height - 2) + [bot]
 
-    " Draw frame
-    let s:frame = s:create_float('Comment', {'row': row, 'col': col, 'width': width, 'height': height})
-    call nvim_buf_set_lines(s:frame, 0, -1, v:true, border)
+		" Draw frame
+		let s:frame = s:create_float('Comment', {'row': row, 'col': col, 'width': width, 'height': height})
+		call nvim_buf_set_lines(s:frame, 0, -1, v:true, border)
 
-    " Draw viewport
-    call s:create_float('Normal', {'row': row + 1, 'col': col + 2, 'width': width - 4, 'height': height - 2})
-    autocmd BufWipeout <buffer> execute 'bwipeout' s:frame
-  endfunction
+		" Draw viewport
+		call s:create_float('Normal', {'row': row + 1, 'col': col + 2, 'width': width - 4, 'height': height - 2})
+		autocmd BufWipeout <buffer> execute 'bwipeout' s:frame
+	endfunction
 
-  let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+	let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 endif
 
 
@@ -267,31 +269,31 @@ endif
 "   \ 'header':  ['fg', 'Comment'] }
 
 
-  " FZF {{{
-  " <C-p> or <C-t> to search files
-  nnoremap <silent> <C-t> :History <cr>
-  nnoremap <silent> <C-p> :FZF -m<cr>
+" FZF {{{
+" <C-p> or <C-t> to search files
+nnoremap <silent> <C-t> :History <cr>
+nnoremap <silent> <C-p> :FZF -m<cr>
 
-  " <M-p> for open junegunn/fzf.vimbuffers
-  " nnoremap <M-e> :Buffers <cr>
-  "nnoremap <M-E> :History <cr>
+" <M-p> for open junegunn/fzf.vimbuffers
+" nnoremap <M-e> :Buffers <cr>
+"nnoremap <M-E> :History <cr>
 
-  nnoremap <Leader>d :Buffers<cr>
-  nnoremap <Leader>b :Buffers<cr>
+nnoremap <Leader>d :Buffers<cr>
+nnoremap <Leader>b :Buffers<cr>
 
-  " <M-S-p> for MRU
-  "nnoremap <silent> <M-S-p> :History<cr>
+" <M-S-p> for MRU
+"nnoremap <silent> <M-S-p> :History<cr>
 
-  " Use fuzzy completion relative filepaths across directory
-  imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+" Use fuzzy completion relative filepaths across directory
+imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
 
-  " Better command history with q:
-  command! CmdHist call fzf#vim#command_history({'right': '60'})
-  nnoremap q: :CmdHist<CR>
+" Better command history with q:
+command! CmdHist call fzf#vim#command_history({'right': '60'})
+nnoremap q: :CmdHist<CR>
 
-  " Better search history
-  command! QHist call fzf#vim#search_history({'right': '60'})
-  nnoremap q/ :QHist<CR>
+" Better search history
+command! QHist call fzf#vim#search_history({'right': '60'})
+nnoremap q/ :QHist<CR>
 
 
 " ansible config options from plugin
@@ -322,11 +324,11 @@ let g:ale_fix_on_save = 0
 "let g:ale_fixers = {}
 
 let g:ale_fixers = {
-\   'javascript': ['prettier'],
-\   'css': ['prettier'],
-\   'yaml': ['prettier'],
-\   'yaml.ansible': ['prettier'],
-\}
+			\   'javascript': ['prettier'],
+			\   'css': ['prettier'],
+			\   'yaml': ['prettier'],
+			\   'yaml.ansible': ['prettier'],
+			\}
 
 let g:ale_keep_list_window_open = 0
 let g:ale_lint_delay = 200
@@ -363,10 +365,10 @@ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
 let g:deoplete#ignore_sources.php = ['omni']
 call deoplete#custom#option('sources', {
-    \ '_': ['ale', 'omni', 'around', 'buffer', 'tag', 'member', 'file', 'neosnippet'],
-    \ 'php': ['ale', 'phpactor', 'around', 'buffer', 'member', 'file', 'neosnippet'],
-    \ 'javascript': ['ale', 'tern', 'around', 'buffer', 'member', 'file', 'neosnippet']
-    \})
+			\ '_': ['ale', 'omni', 'around', 'buffer', 'tag', 'member', 'file', 'neosnippet'],
+			\ 'php': ['ale', 'phpactor', 'around', 'buffer', 'member', 'file', 'neosnippet'],
+			\ 'javascript': ['ale', 'tern', 'around', 'buffer', 'member', 'file', 'neosnippet']
+			\})
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#file#enable_buffer_path = 1
 let g:deoplete#auto_complete_delay = 3
@@ -530,7 +532,8 @@ nmap <leader>f :GitFiles<cr>
 
 " Tab between buffers
 "noremap <tab> <c-w><c-w>
-
+map <F2> :bprevious<CR>
+map <F3> :bnext<CR>
 " Switch between last two buffers
 nnoremap <leader><leader> <C-^>
 
@@ -540,10 +543,10 @@ nnoremap <leader>z  :wq!<cr>
 
 " Resize buffers
 if bufwinnr(1)
-  nmap Ä <C-W><<C-W><
-  nmap Ö <C-W>><C-W>>
-  nmap ö <C-W>-<C-W>-
-  nmap ä <C-W>+<C-W>+
+	nmap Ä <C-W><<C-W><
+	nmap Ö <C-W>><C-W>>
+	nmap ö <C-W>-<C-W>-
+	nmap ä <C-W>+<C-W>+
 endif
 
 " Syntastic
@@ -554,8 +557,8 @@ set cursorline
 
 
 augroup ansible_vim_fthosts
-  autocmd!
-  autocmd BufNewFile,BufRead hosts setfiletype yaml.ansible
+	autocmd!
+	autocmd BufNewFile,BufRead hosts setfiletype yaml.ansible
 augroup END
 
 
