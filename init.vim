@@ -19,11 +19,11 @@ Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 
-
+   
 " Sets setup for system
 Plug 'mkitt/tabline.vim'
 
-Plug 'phenomenes/ansible-snippets'
+"Plug 'phenomenes/ansible-snippets'
 
 " The plugisng for neovim
 " My Bundles
@@ -44,6 +44,9 @@ Plug '907th/vim-auto-save'
 "Plug 'rizzatti/dash.vim'
 "
 let g:auto_save = 1
+
+let g:auto_save_events = ["InsertLeave", "TextChanged", "CursorHold 50",]
+
 "let g:auto_save_in_insert_mode = 0
 
 " Deoplete Plugins
@@ -52,8 +55,8 @@ let g:auto_save = 1
 
 "" Neosnipet expansion
 
-Plug 'Shougo/neosnippet.vim' " snippet manager
-Plug 'Shougo/neosnippet-snippets'
+"Plug 'Shougo/neosnippet.vim' " snippet manager
+"Plug 'Shougo/neosnippet-snippets'
 
 " php refactoring options
 " Plug 'StanAngeloff/php.vim', {'for': 'php'}
@@ -83,6 +86,10 @@ Plug 'mileszs/ack.vim'
 Plug 'dense-analysis/ale'
 Plug 'pearofducks/ansible-vim', { 'do': 'cd ./UltiSnips; ./generate.py' }
 
+"Auto Forma on save
+Plug 'Chiel92/vim-autoformat'
+
+
 
 " Teraform 
 Plug 'hashivim/vim-terraform'
@@ -95,7 +102,7 @@ Plug 'thirtythreeforty/lessspace.vim'
 " Search silver brew install the_silver_searcher require to install searcher
 " Poligota
 "Plug 'sheerun/vim-polyglot'
-Plug 'nathanaelkane/vim-indent-guides'
+"Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'Lokaltog/vim-easymotion'
 
 
@@ -114,7 +121,11 @@ Plug 'junegunn/fzf.vim'
 
 
 " post install (yarn install | npm install) then load plugin only for editing supported files
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 
 " EOF PLUGS 
 call plug#end()
@@ -122,6 +133,9 @@ call plug#end()
 
 " Map Leader to comma
 let mapleader = ","
+
+
+
 
 
 """ Teraform config
@@ -329,17 +343,28 @@ let g:ale_fix_on_save = 0
 
 let g:ale_fixers = {
 			\   'javascript': ['prettier'],
+			\   'html': ['prettier'],
 			\   'css': ['prettier'],
 			\   'yaml': ['prettier'],
 			\   'yaml.ansible': ['prettier'],
+			\   'python': ['autopep8','yapf'],
 			\}
+
+
+"let g:ale_linters = ['flake8', 'pylint']
+let g:ale_linters = {'python': ['flake8']}
+"let g:ale_linters = ['flake8']
+" Fix Python files with autopep8 and yapf.
+"let g:ale_fixers = ['autopep8', 'yapf']
+" Disable warnings about trailing whitespace for Python files.
+let g:ale_warn_about_trailing_whitespace = 0
 
 let g:ale_keep_list_window_open = 0
 let g:ale_lint_delay = 200
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 'always'
-let g:ale_linter_aliases = {}
+"let g:ale_linter_aliases = {}
 "let g:ale_linters = {'yaml': []}
 let g:ale_open_list = 0
 let g:ale_set_highlights = 1
@@ -354,6 +379,10 @@ let g:ale_statusline_format = ['%d error(s)', '%d warning(s)', 'OK']
 let g:ale_warn_about_trailing_whitespace = 1
 
 
+"" Patyhon set tab
+set expandtab
+set tabstop=4
+set shiftwidth=4
 
 
 " deoplete testing
@@ -369,9 +398,9 @@ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
 let g:deoplete#ignore_sources.php = ['omni']
 call deoplete#custom#option('sources', {
-			\ '_': ['ale', 'omni', 'around', 'buffer', 'tag', 'member', 'file', 'neosnippet'],
-			\ 'php': ['ale', 'phpactor', 'around', 'buffer', 'member', 'file', 'neosnippet'],
-			\ 'javascript': ['ale', 'tern', 'around', 'buffer', 'member', 'file', 'neosnippet']
+			\ '_': ['ale', 'omni', 'around', 'buffer', 'tag', 'member', 'file' ],
+			\ 'php': ['ale', 'phpactor', 'around', 'buffer', 'member', 'file', ],
+			\ 'javascript': ['ale', 'tern', 'around', 'buffer', 'member', 'file']
 			\})
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#file#enable_buffer_path = 1
@@ -419,6 +448,9 @@ noremap <Leader>q :q!<CR>
 noremap <Leader>rg :Rg<CR>
 
 
+noremap <F3> :Autoformat<CR>
+autocmd FileType python nnoremap <Leader>p :Autoformat<CR>
+"noremap <Leader>p :Autoformat<CR>
 set pastetoggle=<F2>
 "let g:pymode_rope = 0
 " Documentation
@@ -426,26 +458,9 @@ set pastetoggle=<F2>
 "let g:pymode_doc_key = 'K'
 
 "Linting
-"let g:pymode_lint = 1
-"let g:pymode_lint_checker = "pyflakes,pep8"
-" Auto check on save
-"let g:pymode_lint_write = 1
+" Python Linting
+"
 
-" Support virtualenv
-"let g:pymode_virtualenv = 1
-
-" Enable breakpoints plugin
-"let g:pymode_breakpoint = 1
-"let g:pymode_breakpoint_bind = '<leader>b'
-
-" syntax highlighting
-"let g:pymode_syntax = 1
-"let g:pymode_syntax_all = 1
-"let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-"let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" Don't autofold code
-"let g:pymode_folding = 0
 
 
 
