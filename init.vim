@@ -6,48 +6,67 @@ if has('nvim')
 	let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 end
 set t_Co=256
-
+set termguicolors
 set rtp+=~/.config/nvim/autoload
 
 call plug#begin('~/.config/nvim/autoload')
 "Color Boje
-Plug 'flazz/vim-colorschemes'
+"Plug 'flazz/vim-colorschemes'
+"-------------- Comments -------------------------
 Plug 'tpope/vim-commentary'
 
-""" TERN
-Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
-Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
-Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
+" -------------- Java script plugins ------------------
+"Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
+"Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+"Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 
    
 " Sets setup for system
-Plug 'mkitt/tabline.vim'
+"---- Tab numbers not used anymore Switch to buffers
+"--- Plug 'mkitt/tabline.vim'
 
 "Plug 'phenomenes/ansible-snippets'
 
 " The plugisng for neovim
 " My Bundles
-if has('nvim')
-	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-	Plug 'Shougo/deoplete.nvim'
-	Plug 'roxma/nvim-yarp'
-	Plug 'roxma/vim-hug-neovim-rpc'
-endif
-" Autosave vim NEOVIM 
+"if has('nvim')
+"	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+"	Plug 'Shougo/deoplete.nvim'
+"	Plug 'roxma/nvim-yarp'
+"	Plug 'roxma/vim-hug-neovim-rpc'
+"endif
+"
+"
+""" LIVE RELOAD NEOVIM
+
+Plug 'jaxbot/browserlink.vim'
+
+
+"
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+
+Plug 'elixir-editors/vim-elixir'
+
+
+""------------------- Autosave vim NEOVIM ------------------------
 "
 "
 Plug '907th/vim-auto-save'
 
-
-
-"Plug 'rizzatti/dash.vim'
-"
 let g:auto_save = 1
 
-let g:auto_save_events = ["InsertLeave", "TextChanged", "CursorHold 50",]
+let g:auto_save_events = ["InsertLeave"]
 
-"let g:auto_save_in_insert_mode = 0
+let g:auto_save_in_insert_mode = 0
+"------------------- EOF Autosave vim NEOVIM ------------------------
+
+
+"---------------------- Elixir autocompletion ------------------------
+"
+"Plug 'slashmili/alchemist.vim'
+
 
 " Deoplete Plugins
 
@@ -87,31 +106,31 @@ Plug 'dense-analysis/ale'
 Plug 'pearofducks/ansible-vim', { 'do': 'cd ./UltiSnips; ./generate.py' }
 
 "Auto Forma on save
-Plug 'Chiel92/vim-autoformat'
+"Plug 'Chiel92/vim-autoformat'
 
 
 
 " Teraform 
-Plug 'hashivim/vim-terraform'
+"Plug 'hashivim/vim-terraform'
 "Plug 'vim-syntastic/syntastic'
-Plug 'juliosueiras/vim-terraform-completion'
+"Plug 'juliosueiras/vim-terraform-completion'
 
 " Remove less space plugin
 
-Plug 'thirtythreeforty/lessspace.vim'
+"  Plug 'thirtythreeforty/lessspace.vim'
 " Search silver brew install the_silver_searcher require to install searcher
 " Poligota
 "Plug 'sheerun/vim-polyglot'
 "Plug 'nathanaelkane/vim-indent-guides'
 " Plug 'Lokaltog/vim-easymotion'
 
-
+"-- Allows tmux move between  panes ----
 
 Plug 'christoomey/vim-tmux-navigator'
 
 ""YANK TMUX
 
-Plug 'roxma/vim-tmux-clipboard'
+"Plug 'roxma/vim-tmux-clipboard'
 
 " FZF setting ctrlp other
 
@@ -204,6 +223,8 @@ let g:fzf_history_dir = '~/.config/nvim/fuzzy-history'
 " - down / up / left / right
 "let g:fzf_layout = { 'up': '~80%' }
 
+
+
 let g:fzf_colors =
 			\ { 'fg':      ['fg', 'Normal'],
 			\ 'bg':      ['bg', 'Normal'],
@@ -286,6 +307,7 @@ endif
 "   \ 'spinner': ['fg', 'Label'],
 "   \ 'header':  ['fg', 'Comment'] }
 
+inoremap <silent><expr> <c-l> coc#refresh()
 
 " FZF {{{
 " <C-p> or <C-t> to search files
@@ -298,6 +320,7 @@ nnoremap <silent> <C-p> :FZF -m<cr>
 
 nnoremap <Leader>d :Buffers<cr>
 nnoremap <Leader>b :Buffers<cr>
+nnoremap <Leader>r :reg<cr>
 
 " <M-S-p> for MRU
 "nnoremap <silent> <M-S-p> :History<cr>
@@ -316,13 +339,32 @@ nnoremap q/ :QHist<CR>
 
 " ansible config options from plugin
 
-let g:ansible_unindent_after_newline = 3
+"let g:ansible_unindent_after_newline = 3
+"let g:ansible_attribute_highlight = "ob"
+"let g:ansible_name_highlight = 'd'
+"let g:ansible_extra_keywords_highlight = 1
+"let g:ansible_yamlKeyName = 'yamlKey'
+"let g:ansible_template_syntaxes = { '*.j2': '.config.j2' }
+"let g:ansible_with_keywords_highlight = 'Constant'
+"++++++++++++++++++ansible-vim Plugin++++++++++++++++
+let g:ansible_unindent_after_newline = 0
 let g:ansible_attribute_highlight = "ob"
 let g:ansible_name_highlight = 'd'
 let g:ansible_extra_keywords_highlight = 1
-let g:ansible_yamlKeyName = 'yamlKey'
-let g:ansible_template_syntaxes = { '*.j2': '.config.j2' }
+"let g:ansible_yamlKeyName = 'yamlKey'
+let g:ansible_normal_keywords_highlight = 'Constant'
 let g:ansible_with_keywords_highlight = 'Constant'
+let g:ansible_template_syntaxes = { '*.rb.j2': 'ruby', '*.yml': 'yaml.ansible','*.j2': 'ruby.jinja2' }
+au BufRead,BufNewFile */playbooks/*.yml set filetype=yaml.ansible
+au BufRead,BufNewFile /etc/ansible/roles/*/*/*.yml set filetype=yaml.ansible
+au BufRead,BufNewFile /etc/ansible/roles/*/templates/*.j2 set filetype=ruby.jinja2
+"++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+"
+"
+"
+"
 "
 
 "
@@ -347,12 +389,14 @@ let g:ale_fixers = {
 			\   'css': ['prettier'],
 			\   'yaml': ['prettier'],
 			\   'yaml.ansible': ['prettier'],
+            \   'elixir': ['mix_format'],
 			\   'python': ['autopep8','yapf'],
 			\}
 
-
-"let g:ale_linters = ['flake8', 'pylint']
-let g:ale_linters = {'python': ['flake8']}
+let g:ale_linters = {
+         \'python': ['flake8'],
+         \'elixir': ['elixir-ls'],
+         \}
 "let g:ale_linters = ['flake8']
 " Fix Python files with autopep8 and yapf.
 "let g:ale_fixers = ['autopep8', 'yapf']
@@ -389,22 +433,22 @@ set shiftwidth=4
 
 
 " Deoplete enable
-let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup = 1
 
 " deoplete tab-complete
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 
-let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
-let g:deoplete#ignore_sources.php = ['omni']
-call deoplete#custom#option('sources', {
-			\ '_': ['ale', 'omni', 'around', 'buffer', 'tag', 'member', 'file' ],
-			\ 'php': ['ale', 'phpactor', 'around', 'buffer', 'member', 'file', ],
-			\ 'javascript': ['ale', 'tern', 'around', 'buffer', 'member', 'file']
-			\})
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#file#enable_buffer_path = 1
-let g:deoplete#auto_complete_delay = 3
+" let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
+" let g:deoplete#ignore_sources.php = ['omni']
+" call deoplete#custom#option('sources', {
+" 			\ '_': ['ale', 'omni', 'around', 'buffer', 'tag', 'member', 'file' ],
+" 			\ 'php': ['ale', 'phpactor', 'around', 'buffer', 'member', 'file', ],
+" 			\ 'javascript': ['ale', 'tern', 'around', 'buffer', 'member', 'file']
+" 			\})
+" let g:deoplete#enable_smart_case = 1
+" let g:deoplete#file#enable_buffer_path = 1
+" let g:deoplete#auto_complete_delay = 3
 
 
 set completeopt=longest,menuone,preview
@@ -417,8 +461,8 @@ xmap <C-k> <Plug>(neosnippet_expand_target)
 
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 
-let g:neosnippet#enable_completed_snippet = 1
-let g:neosnippet#enable_snipmate_compatibility = 1
+"let g:neosnippet#enable_completed_snippet = 1
+"let g:neosnippet#enable_snipmate_compatibility = 1
 
 " tern
 "if exists('g:plugs["tern_for_vim"]')
@@ -485,7 +529,7 @@ syntax on
 
 "color jellybeans
 set background=dark
-colorscheme Monokai
+colorscheme MonokaiTasty
 "let g:jellybeans_use_term_italics = 1
 
 
@@ -573,6 +617,7 @@ endif
 ""set line
 set nu
 set cursorline
+set cursorcolumn
 
 
 augroup ansible_vim_fthosts
@@ -591,6 +636,10 @@ autocmd FileType yaml.ansible setlocal commentstring=#\ %s
 " autocmd BufNewFile,BufReadPost * if &filetype == yaml expandtab shiftwidth=2 indentkeys-=0# | endif
 " autocmd BufNewFile,BufReadPost * filetype == yaml expandtab shiftwidth=2 indentkeys-=0#
 
+
+ let g:coc_filetype_map = {
+ \ 'yaml.ansible': 'yaml',
+ \ }
 
 
 " CtrlP
