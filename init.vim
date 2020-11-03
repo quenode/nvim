@@ -144,7 +144,7 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql','markdown', 'vue', 'yaml', 'html'] }
 
 " EOF PLUGS 
 call plug#end()
@@ -361,6 +361,20 @@ au BufRead,BufNewFile /etc/ansible/roles/*/templates/*.j2 set filetype=ruby.jinj
 "++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+""" Other Configurations ###PYTHON STUFF
+filetype plugin indent on
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set incsearch ignorecase smartcase hlsearch
+set ruler laststatus=2 showcmd showmode
+set list listchars=trail:»,tab:»-
+set fillchars+=vert:\ 
+set wrap breakindent
+set encoding=utf-8
+set number
+set title
+
+
+
 "
 "
 "
@@ -390,7 +404,7 @@ let g:ale_fixers = {
 			\   'yaml': ['prettier'],
 			\   'yaml.ansible': ['prettier'],
             \   'elixir': ['mix_format'],
-			\   'python': ['autopep8','yapf'],
+			\   'python': ['black','yapf'],
 			\}
 
 let g:ale_linters = {
@@ -421,12 +435,8 @@ let g:ale_sign_offset = 1000000
 let g:ale_sign_warning = '▲'
 let g:ale_statusline_format = ['%d error(s)', '%d warning(s)', 'OK']
 let g:ale_warn_about_trailing_whitespace = 1
-
-
-"" Patyhon set tab
-set expandtab
-set tabstop=4
-set shiftwidth=4
+" Disable ale completitio uses coc
+let g:ale_completion_enabled = 0
 
 
 " deoplete testing
@@ -492,9 +502,9 @@ noremap <Leader>q :q!<CR>
 noremap <Leader>rg :Rg<CR>
 
 
-noremap <F3> :Autoformat<CR>
-autocmd FileType python nnoremap <Leader>p :Autoformat<CR>
-"noremap <Leader>p :Autoformat<CR>
+"noremap <F3> :AleFixer<CR>
+""autocmd FileType python nnoremap <Leader>p :Autoformat<CR>
+noremap <Leader>p :ALEFix<CR>
 set pastetoggle=<F2>
 "let g:pymode_rope = 0
 " Documentation
