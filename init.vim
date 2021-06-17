@@ -133,8 +133,6 @@ set rtp+=/usr/local/opt/fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-
-
 " post install (yarn install | npm install) then load plugin only for editing supported files
 
 
