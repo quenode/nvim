@@ -2,11 +2,18 @@
 
 "New changes
 
-if has('nvim')
-	let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-end
-set t_Co=256
-set termguicolors
+"if has('nvim')
+"	let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+"end
+""set t_Co=256
+"set termguicolors
+
+if exists('+termguicolors')
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
 set rtp+=~/.config/nvim/autoload
 
 call plug#begin('~/.config/nvim/autoload')
@@ -15,52 +22,40 @@ call plug#begin('~/.config/nvim/autoload')
 "-------------- Comments -------------------------
 Plug 'tpope/vim-commentary'
 
-" -------------- Java script plugins ------------------
-"Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
-"Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
-"Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'tpope/vim-liquid'
 
-   
-" Sets setup for system
-"---- Tab numbers not used anymore Switch to buffers
-"--- Plug 'mkitt/tabline.vim'
+"" Fish syntax higlater 
+Plug 'dag/vim-fish'
+
+
 
 "Plug 'phenomenes/ansible-snippets'
+" We love Icons 
+Plug 'ryanoasis/vim-devicons'
 
-" The plugisng for neovim
-" My Bundles
-"if has('nvim')
-"	Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"else
-"	Plug 'Shougo/deoplete.nvim'
-"	Plug 'roxma/nvim-yarp'
-"	Plug 'roxma/vim-hug-neovim-rpc'
-"endif
-"
+
+" Replace two collumnus left right
+" :%s/\v^(\S+)\s+(\S+).*$/\2 \1/
 "
 """ LIVE RELOAD NEOVIM
 
-Plug 'jaxbot/browserlink.vim'
-
 
 "
+""COC REMOVE
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-
-Plug 'elixir-editors/vim-elixir'
 
 
 ""------------------- Autosave vim NEOVIM ------------------------
 "
 "
-Plug '907th/vim-auto-save'
+"Plug '907th/vim-auto-save'
 
-let g:auto_save = 1
+"let g:auto_save = 1
 
-let g:auto_save_events = ["InsertLeave"]
+"let g:auto_save_events = ["InsertLeave"]
 
-let g:auto_save_in_insert_mode = 0
-"------------------- EOF Autosave vim NEOVIM ------------------------
+"let g:auto_save_in_insert_mode = 0
+""------------------- EOF Autosave vim NEOVIM ------------------------
 
 
 "---------------------- Elixir autocompletion ------------------------
@@ -102,7 +97,7 @@ let g:auto_save_in_insert_mode = 0
 
 Plug 'mileszs/ack.vim'
 
-Plug 'dense-analysis/ale'
+"Plug 'dense-analysis/ale'
 Plug 'pearofducks/ansible-vim', { 'do': 'cd ./UltiSnips; ./generate.py' }
 
 "Auto Forma on save
@@ -133,13 +128,17 @@ Plug 'christoomey/vim-tmux-navigator'
 "Plug 'roxma/vim-tmux-clipboard'
 
 " FZF setting ctrlp other
+set rtp+=/usr/local/opt/fzf
 
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 
 
 " post install (yarn install | npm install) then load plugin only for editing supported files
+
+
+let g:webdevicons_enable = 1
 
 
 Plug 'prettier/vim-prettier', {
@@ -280,6 +279,11 @@ if has('nvim')
 endif
 
 
+" coc refactor
+" nnoremap <leader>em :CocCommand python.refactorExtractMethod<cr>
+" vnoremap <leader>em :CocCommand python.refactorExtractMethod<cr>
+" nnoremap <leader>ev :CocCommand python.refactorExtractVariable<cr>
+
 
 
 "
@@ -307,7 +311,109 @@ endif
 "   \ 'spinner': ['fg', 'Label'],
 "   \ 'header':  ['fg', 'Comment'] }
 
-inoremap <silent><expr> <c-l> coc#refresh()
+" inoremap <silent><expr> <c-l> coc#refresh()
+
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+
+" Coc GOTO FUNCTIOJN
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+" Note coc#float#scroll works on neovim >= 0.4.0 or vim >= 8.2.0750
+nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
+" NeoVim-only mapping for visual mode scroll
+" Useful on signatureHelp after jump placeholder of snippet expansion
+if has('nvim')
+  vnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#nvim_scroll(1, 1) : "\<C-f>"
+  vnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#nvim_scroll(0, 1) : "\<C-b>"
+endif
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+
 
 " FZF {{{
 " <C-p> or <C-t> to search files
@@ -369,12 +475,15 @@ set ruler laststatus=2 showcmd showmode
 set list listchars=trail:»,tab:»-
 set fillchars+=vert:\ 
 set wrap breakindent
-set encoding=utf-8
+set encoding=UTF-8
 set number
 set title
-
-
-
+"" allow buffer hidden
+set hidden
+"" disable foddables i hate that
+set nofoldenable    " disable folding
+"
+"
 "
 "
 "
@@ -388,55 +497,49 @@ set title
 "let b:ale_fixers = ['prettier', 'eslint']
 " Equivalent to the above.
 "let b:ale_fixers = {'javascript': ['prettier', 'eslint']}
+"--- ALE LINTER -----
+" let g:ale_echo_cursor = 1
+" let g:ale_echo_msg_error_str = 'Error'
+" let g:ale_echo_msg_format = '%s'
+" let g:ale_echo_msg_warning_str = 'Warning'
+" let g:ale_enabled = 1
+" let g:ale_fix_on_save = 0
 
-let g:ale_echo_cursor = 1
-let g:ale_echo_msg_error_str = 'Error'
-let g:ale_echo_msg_format = '%s'
-let g:ale_echo_msg_warning_str = 'Warning'
-let g:ale_enabled = 1
-let g:ale_fix_on_save = 0
-"let g:ale_fixers = {}
+" let g:ale_fixers = {
+" 			\   'javascript': ['prettier'],
+" 			\   'html': ['prettier'],
+" 			\   'css': ['prettier'],
+" 			\   'yaml': ['prettier'],
+" 			\   'yaml.ansible': ['prettier'],
+"             \   'elixir': ['mix_format'],
+" 			\   'python': ['black','yapf'],
+" 			\}
 
-let g:ale_fixers = {
-			\   'javascript': ['prettier'],
-			\   'html': ['prettier'],
-			\   'css': ['prettier'],
-			\   'yaml': ['prettier'],
-			\   'yaml.ansible': ['prettier'],
-            \   'elixir': ['mix_format'],
-			\   'python': ['black','yapf'],
-			\}
+" let g:ale_linters = {
+"          \'python': ['flake8'],
+"          \'elixir': ['elixir-ls'],
+"          \}
+" " Disable warnings about trailing whitespace for Python files.
+" let g:ale_warn_about_trailing_whitespace = 0
 
-let g:ale_linters = {
-         \'python': ['flake8'],
-         \'elixir': ['elixir-ls'],
-         \}
-"let g:ale_linters = ['flake8']
-" Fix Python files with autopep8 and yapf.
-"let g:ale_fixers = ['autopep8', 'yapf']
-" Disable warnings about trailing whitespace for Python files.
-let g:ale_warn_about_trailing_whitespace = 0
-
-let g:ale_keep_list_window_open = 0
-let g:ale_lint_delay = 200
-let g:ale_lint_on_enter = 1
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 'always'
-"let g:ale_linter_aliases = {}
-"let g:ale_linters = {'yaml': []}
-let g:ale_open_list = 0
-let g:ale_set_highlights = 1
-let g:ale_set_loclist = 1
-let g:ale_set_quickfix = 0
-let g:ale_set_signs = 1
-let g:ale_sign_column_always = 0
-let g:ale_sign_error = '✗'
-let g:ale_sign_offset = 1000000
-let g:ale_sign_warning = '▲'
-let g:ale_statusline_format = ['%d error(s)', '%d warning(s)', 'OK']
-let g:ale_warn_about_trailing_whitespace = 1
-" Disable ale completitio uses coc
-let g:ale_completion_enabled = 0
+" let g:ale_keep_list_window_open = 0
+" let g:ale_lint_delay = 200
+" let g:ale_lint_on_enter = 1
+" let g:ale_lint_on_save = 1
+" let g:ale_lint_on_text_changed = 'always'
+" let g:ale_open_list = 0
+" let g:ale_set_highlights = 1
+" let g:ale_set_loclist = 1
+" let g:ale_set_quickfix = 0
+" let g:ale_set_signs = 1
+" let g:ale_sign_column_always = 0
+" let g:ale_sign_error = '✗'
+" let g:ale_sign_offset = 1000000
+" let g:ale_sign_warning = '▲'
+" let g:ale_statusline_format = ['%d error(s)', '%d warning(s)', 'OK']
+" let g:ale_warn_about_trailing_whitespace = 1
+" " Disable ale completitio uses coc
+" let g:ale_completion_enabled = 0
 
 
 " deoplete testing
@@ -446,7 +549,7 @@ let g:ale_completion_enabled = 0
 " let g:deoplete#enable_at_startup = 1
 
 " deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+"inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 
 " let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
@@ -474,22 +577,6 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 "let g:neosnippet#enable_completed_snippet = 1
 "let g:neosnippet#enable_snipmate_compatibility = 1
 
-" tern
-"if exists('g:plugs["tern_for_vim"]')
-"let g:tern_show_argument_hints = 'on_hold'
-"  let g:tern_show_signature_in_pum = 1
-" autocmd FileType javascript setlocal omnifunc=tern#Complete
-"endif
-
-nnoremap th  :tabfirst<CR>
-nnoremap tj  :tabnext<CR>
-nnoremap tk  :tabprev<CR>
-nnoremap tl  :tablast<CR>
-nnoremap tt  :tabedit<Space>
-nnoremap tn  :tabnext<Space>
-nnoremap tm  :tabm<Space>
-nnoremap td  :tabclose<CR>
-
 "" Qucik save
 noremap <Leader>s :update<CR>
 vnoremap <Leader>s :update<CR>
@@ -504,16 +591,7 @@ noremap <Leader>rg :Rg<CR>
 
 "noremap <F3> :AleFixer<CR>
 ""autocmd FileType python nnoremap <Leader>p :Autoformat<CR>
-noremap <Leader>p :ALEFix<CR>
-set pastetoggle=<F2>
-"let g:pymode_rope = 0
-" Documentation
-"let g:pymode_doc = 1
-"let g:pymode_doc_key = 'K'
-
-"Linting
-" Python Linting
-"
+noremap <Leader>p :call CocAction('format')<CR>
 
 
 
@@ -535,11 +613,9 @@ set pastetoggle=<F2>
 "filetype plugin indent on
 syntax on
 
-
-
 "color jellybeans
 set background=dark
-colorscheme MonokaiTasty
+colorscheme Monokai
 "let g:jellybeans_use_term_italics = 1
 
 
@@ -562,21 +638,12 @@ filetype plugin on
 " set indentkeys-=0#
 
 
-
-
 "set showmatch
 set guifont=Source\ Code\ Pro\ for\ Powerline:h13
 set laststatus=2
 set encoding=utf-8
-set t_Co=256
 set fillchars+=stl:\ ,stlnc:\
 set termencoding=utf-8
-
-
-
-
-
-
 
 
 
@@ -659,10 +726,14 @@ let g:ctrlp_by_filename = 1
 let g:ctrlp_max_files = 0
 let g:ctrlp_max_depth = 100
 
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
 
 " Go programming
 "set rtp+=/usr/local/Cellar/go/1.0.3/misc/vim
-set rtp+=/usr/local/opt/fzf
 
 " Quit with :Q
 command -nargs=0 Quit :qa!
