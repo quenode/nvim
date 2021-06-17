@@ -1,0 +1,116 @@
+{
+"coc.preferences.bracketEnterImprove": true,
+"coc.preferences.colorSupport": true,
+"coc.preferences.currentFunctionSymbolAutoUpdate": true,
+"coc.preferences.enableFloatHighlight": true,
+"coc.preferences.hoverTarget": "float",
+"coc.preferences.previewAutoClose": true,
+"coc.preferences.rootPatterns": [".git", ".hg", ".projections.json", ".vim"],
+"coc.source.buffer.ignoreGitignore": false,
+"codeLens.enable": true,
+"codeLens.separator": "❱",
+"diagnostic.enable": true,
+"diagnostic.enableSign": true,
+"diagnostic.messageTarget": "float",
+"diagnostic.refreshOnInsertMode": true,
+"diagnostic.virtualText": true,
+"yaml.trace.server": "verbose",
+"yaml.format.enable": true,
+"yaml.completion": true,
+"yaml.format.singleQuote": true,
+"python.jediEnabled": false,
+"python.analysis.diagnosticEnabled": true,
+"python.autoComplete.addBrackets": false,
+"python.autoComplete.showAdvancedMembers": true,
+"python.autoUpdateLanguageServer": true,
+"python.formatting.blackArgs": ["--line-length=80", "-S"],
+"python.formatting.blackPath": "/usr/local/bin/black",
+"python.formatting.provider": "black",
+"python.formatting.yapfPath": "/usr/local/bin/yapf",
+"python.linting.enabled": true,
+"python.linting.pydocstyleArgs": ["--ignore=D100"],
+"python.linting.pydocstyleEnabled": false,
+"python.linting.pydocstylePath": "/usr/local/bin/pydocstyle",
+"python.linting.pylintEnabled": true,
+"python.linting.pylintPath": "/usr/local/bin/black",
+"python.linting.pylintUseMinimalCheckers": true,
+"python.pythonPath": "/usr/local/bin/python3",
+"python.terminal.activateEnvironment": true,
+"languageserver": {
+ "python": {
+    "command": "python3",
+    "args": [
+      "-mpyls",
+      "-vv",
+      "--log-file",
+      "/tmp/lsp_python.log"
+    ],
+    "trace.server": "verbose",
+    "filetypes": [
+      "python"
+    ],
+    "settings": {
+      "pyls": {
+        "enable": true,
+        "trace": {
+          "server": "verbose"
+        },
+        "commandPath": "",
+        "configurationSources": [
+          "pycodestyle"
+        ],
+        "plugins": {
+          "jedi_completion": {
+            "enabled": false
+          },
+          "jedi_hover": {
+            "enabled": false
+          },
+          "jedi_references": {
+            "enabled": false
+          },
+          "jedi_signature_help": {
+            "enabled": false
+          },
+          "jedi_symbols": {
+            "enabled": false,
+            "all_scopes": false
+          },
+          "mccabe": {
+            "enabled": true,
+            "threshold": 15
+          },
+          "preload": {
+            "enabled": true
+          },
+          "pycodestyle": {
+            "enabled": true
+          },
+          "pydocstyle": {
+            "enabled": false,
+            "match": "(?!test_).*\\.py",
+            "matchDir": "[^\\.].*"
+          },
+          "pyflakes": {
+            "enabled": true
+          },
+          "rope_completion": {
+            "enabled": true
+          },
+          "yapf": {
+            "enabled": true
+          }
+        }
+      }
+    }
+  }
+},
+
+"yaml.schemas": {
+        "kubernetes": "/*.yaml",
+        "http://json.schemastore.org/ansible-stable-2.9": "yaml.ansible"
+      },
+      "coc.preferences.extensionUpdateCheck": "daily"
+}
+
+
