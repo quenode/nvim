@@ -13,6 +13,10 @@ pip install python-language-server
 pip install black
 
 
+## COC install 
+
+CocInstall coc-eslint coc-pyright coc-tsserver coc-yaml coc-css
+
 # node Installs 
 npm install prettier
 
