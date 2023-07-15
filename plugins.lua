@@ -58,12 +58,8 @@ local plugins = {
      lazy = false,
   },
   {
-    'tpope/vim-fugitive',
-     lazy = false,
-
-  },
-
-
+    "kdheepak/lazygit.nvim"
+  }
 
 
   -- Themes nice Tender
