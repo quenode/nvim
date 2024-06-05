@@ -1,7 +1,17 @@
-# NVchad new config switch
+# Based on Kickstarter-modular.nvim config
 
-This new quenode v1 NvChad custom 
+https://github.com/dam9000/kickstart-modular.nvim
 
-changelog:
-  theme: Monokai
+
+Changes:
+   - Some base keymaps to my wokflow
+   - Lazygit
+   - Tmux Navigator
+   - Neotreesetup
+   - Ansible Setup 
+   - Docker Setup
+   - Python LSP
+
+
+
 

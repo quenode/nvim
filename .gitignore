@@ -1,7 +1,7 @@
-autoload/
-fuzzy*
-.new*
-*.backup
-plugged/
-.DS_Store
-.netrwhist
+tags
+test.sh
+.luarc.json
+nvim
+
+spell/
+lazy-lock.json
